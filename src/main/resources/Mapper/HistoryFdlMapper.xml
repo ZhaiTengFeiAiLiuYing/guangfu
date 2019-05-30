@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pb.mapper.HistoryFdlMapper">
+    <update id="createHistoryFdlTable">
+        CREATE TABLE ${tableName} (
+          `id` varchar(20) NOT NULL,
+          `count` double NOT NULL,
+          `lei_xing` varchar(5) NOT NULL,
+          `time` varchar(10) NOT NULL,
+          `xu_lie_hao` varchar(50) NOT NULL,
+          `select_time` VARCHAR (10) NOT NULL,
+          PRIMARY KEY (`id`),
+          KEY `time_xuLieHao` (`xu_lie_hao`,`select_time`)
+)
+    </update>
+
+    <insert id="insertFdl" >
+        insert into ${tableName} values
+      <foreach collection="historyFdls" item="historyFdl" index="index" separator=",">
+          (
+            #{historyFdl.id},
+            #{historyFdl.count},
+            #{historyFdl.leiXing},
+            #{historyFdl.time},
+            #{historyFdl.xuLieHao},
+          #{historyFdl.selectTime}
+          )
+      </foreach>
+    </insert>
+
+    <update id="updateFdl">
+      <foreach collection="historyFdls" item="historyFdl" index="index" open="" separator=";">
+       UPDATE  ${tableName}
+          <set>
+            count=#{historyFdl.count}
+          </set>
+          <where>
+             xu_lie_hao=#{historyFdl.xuLieHao} and select_time=#{selectTime} and time=#{time}
+          </where>
+      </foreach>
+    </update>
+
+    <select id="selectYfdl" resultType="com.pb.pojo.History">
+      select count,time from ${tableName} where xu_lie_hao=#{xuLieHao} and select_time=#{month}
+    </select>
+
+    <insert id="insertYearFdl">
+        insert into yearFdl values
+        <foreach collection="yearFdls" item="yearFdl" index="index" separator=",">
+            (
+            #{yearFdl.id},
+            #{yearFdl.count},
+            #{yearFdl.year},
+            #{yearFdl.updateTime},
+            #{yearFdl.xuLieHao}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateYearFdl">
+        <foreach collection="yearFdls" item="yearFdl" index="index" open="" separator=";">
+            UPDATE  yearFdl
+            <set>
+                count=#{yearFdl.count},update_time=#{yearFdl.updateTime}
+            </set>
+            <where>
+                xu_lie_hao=#{yearFdl.xuLieHao} and  year=#{year}
+            </where>
+        </foreach>
+    </update>
+
+    <select id="selectZongFdl" resultType="com.pb.pojo.YearFdl">
+        select count,year from yearFdl where xu_lie_hao=#{xuLieHao}
+    </select>
+</mapper>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pb.mapper.SheBeiCustomMapper">
+    <select id="selectSheBeiByStation" parameterType="java.lang.String"  resultType="com.pb.pojo.SheBei">
+      select a.she_bei_xu_lie_hao,a.ming_cheng,a.lei_xing,a.xing_hao,b.ce_dian_zhi,b.ce_dian_ming_cheng,b.updatetime from 设备信息 a,实时测值 b
+      where a.suo_shu_zhan_dian=#{stationXuLeiHao} and a.she_bei_xu_lie_hao=b.she_bei_xu_lie_hao
+      and(b.ce_dian_ming_cheng='当日发电量' or b.ce_dian_ming_cheng='累计发电量' or b.ce_dian_ming_cheng='交流有功功率'
+       or b.ce_dian_ming_cheng='开关机状态' or b.ce_dian_ming_cheng='逆变器状态')
+    </select>
+</mapper>
